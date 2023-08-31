@@ -53,6 +53,7 @@ use App\Core\Support\FlashMessage;
             <?php $this->partial('admin-sidebar') ?>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <?php $this->partial('admin-crumbs') ?>
+                <?php include('../templates/partials/crumbs.php') ?>
                 <?php $this->content('content'); ?>
             </main>
         </div>

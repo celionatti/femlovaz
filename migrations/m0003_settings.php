@@ -6,7 +6,7 @@ use App\Core\Database\Migration;
 /**
  * Settings Migration. (Settings Table)
  */
-class m00015_settings extends Migration
+class m0003_settings extends Migration
 {
     public function up(): void
     {

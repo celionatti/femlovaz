@@ -57,6 +57,7 @@ function assets_path($path): string
     return Config::get('domain') . 'assets' . DIRECTORY_SEPARATOR . $path;
 }
 
+
 function console_logger($message): void
 {
     echo "[" . date("Y-m-d H:i:s") . "] - " . $message . PHP_EOL;
