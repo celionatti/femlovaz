@@ -20,6 +20,8 @@ use App\Core\Support\FlashMessage;
     <title>
         <?= $this->getTitle() ?>
     </title>
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('css/datatables.min.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('css/sweetalert2.min.css'); ?>">
     <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/css/bootstrap-icons.css'); ?>">
     <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/css/bootstrap.min.css'); ?>">
     <link type="text/css" rel="stylesheet" href="<?= assets_path('css/dashboard.css'); ?>">
@@ -45,7 +47,7 @@ use App\Core\Support\FlashMessage;
     </style>
 </head>
 
-<body style="background: #83cee0">
+<body style="background-color: #fff;">
     <?php $this->partial('admin-header') ?>
     <div class="container-fluid">
         <?= FlashMessage::bootstrap_alert(); ?>
@@ -61,6 +63,8 @@ use App\Core\Support\FlashMessage;
 
     <script src="<?= assets_path('js/jquery-3.6.3.min.js'); ?>"></script>
     <script src="<?= assets_path('bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
+    <script src="<?= assets_path('js/datatables.min.js'); ?>"></script>
+    <script src="<?= assets_path('js/sweetalert2.all.min.js'); ?>"></script>
 
     <?php $this->content('script') ?>
 </body>

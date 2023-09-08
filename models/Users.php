@@ -22,36 +22,26 @@ class Users extends DbModel
     const BLOCKED = 0;
     const UNBLOCKED = 1;
 
-    const USER_ACCESS = 'user';
+    const GUEST_ACCESS = 'guest';
     const ADMIN_ACCESS = 'admin';
 
-    // public string $slug = "";
-    // public string $surname = "";
-    // public string $name = "";
-    // public string $email = "";
-    // public string|null $phone = null;
-    // public string $acl = self::USER_ACCESS;
-    // public string $password = "";
-    // public string $confirm_password = "";
-    // public string $old_password = "";
-    // public int $blocked = self::BLOCKED;
-    // public string $remember = "";
-    // public string $created_at = "";
-    // public string $updated_at = "";
+    public string $slug = "";
+    public string $surname = "";
+    public string $name = "";
+    public string $email = "";
+    public string|null $phone = null;
+    public string|null $avatar = null;
+    public string $acl = self::GUEST_ACCESS;
+    public string $password = "";
+    public string $confirm_password = "";
+    public string $old_password = "";
+    public int $blocked = self::BLOCKED;
+    public string|null $token = null;
+    public string $remember = "";
+    public string $created_at = "";
+    public string $updated_at = "";
 
     protected static $_current_user = false;
-
-    protected $allowedProperties = [
-        'slug',
-        'surname',
-        'name',
-        'email',
-        'phone',
-        'password',
-        'blocked',
-        'created_at',
-        'updated_at'
-    ];
 
     public static function tableName(): string
     {
@@ -64,7 +54,6 @@ class Users extends DbModel
 
         $this->runValidation(new RequiredValidation($this, ['field' => 'surname', 'msg' => "Surname is a required field."]));
         $this->runValidation(new RequiredValidation($this, ['field' => 'name', 'msg' => "First Name is a required field."]));
-        $this->runValidation(new RequiredValidation($this, ['field' => 'username', 'msg' => "Username is a required field."]));
         $this->runValidation(new RequiredValidation($this, ['field' => 'email', 'msg' => "Email is a required field."]));
         $this->runValidation(new EmailValidation($this, ['field' => 'email', 'msg' => 'You must provide a valid email.']));
         $this->runValidation(new UniqueValidation($this, ['field' => ['email', 'surname', 'name'], 'msg' => 'A user with that email address already exists.']));
@@ -75,9 +64,7 @@ class Users extends DbModel
 
         if ($this->isNew()) {
             $this->runValidation(new RequiredValidation($this, ['field' => 'password', 'msg' => "Password is a required field."]));
-            $this->runValidation(new RequiredValidation($this, ['field' => 'confirm_password', 'msg' => "Confirm Password is a required field."]));
-            $this->runValidation(new MatchesValidation($this, ['field' => 'confirm_password', 'rule' => $this->password, 'msg' => "Your passwords do not match."]));
-            $this->runValidation(new MinValidation($this, ['field' => 'password', 'rule' => 8, 'msg' => "Password must be at least 8 characters."]));
+            $this->runValidation(new MinValidation($this, ['field' => 'password', 'rule' => 5, 'msg' => "Password must be at least 5 characters."]));
 
             $this->password = Bcrypt::hashPassword($this->password);
         }

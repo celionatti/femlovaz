@@ -6,7 +6,7 @@ use App\Core\Config;
 
 ?>
 
-<nav style="background: #83cee0" id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
     <div class="position-sticky pt-3 sidebar-sticky">
         <ul class="nav flex-column">
             <li class="nav-item border mx-2 mb-2 rounded-2">
@@ -19,6 +19,12 @@ use App\Core\Config;
                 <a class="nav-link" href="<?= Config::get('domain') ?>admin/users">
                     <span class="align-text-center bi bi-people"></span>
                     Users
+                </a>
+            </li>
+            <li class="nav-item border mx-2 mb-2 rounded-2">
+                <a class="nav-link" href="<?= Config::get('domain') ?>admin/customers">
+                    <span class="align-text-center bi bi-people"></span>
+                    Customers
                 </a>
             </li>
         </ul>

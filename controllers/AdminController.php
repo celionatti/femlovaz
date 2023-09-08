@@ -31,21 +31,6 @@ class AdminController extends Controller
         $this->view->render('admin/dashboard', $view);
     }
 
-
-    /**
-     * @throws Exception
-     */
-    public function users(Request $request, Response $response)
-    {
-        $view = [
-            'navigations' => [
-                ['label' => 'Dashboard', 'url' => 'admin'],
-                ['label' => 'Users', 'url' => '']
-            ],
-        ];
-        $this->view->render('admin/users/index', $view);
-    }
-
     /**
      * @throws Exception
      */
