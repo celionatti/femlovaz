@@ -6,6 +6,12 @@ use App\Core\Request;
 use App\models\Users;
 use App\Core\Response;
 use App\Core\Controller;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 
 class AdminUsersController extends Controller
@@ -23,6 +29,10 @@ class AdminUsersController extends Controller
      */
     public function users(Request $request, Response $response)
     {
+        if ($request->get("export") && $request->get("export") === "excel") {
+            $this->generate_excel();
+        }
+
         $view = [
             'navigations' => [
                 ['label' => 'Dashboard', 'url' => 'admin'],
@@ -74,7 +84,6 @@ class AdminUsersController extends Controller
                 }
                 $output .= '</tbody></table>';
                 $this->json_response($output);
-                // return $output;
             } else {
                 return '<h3 class="text-center text-secondary mt-5">:( No user present in the database!</h3>';
             }
@@ -138,20 +147,125 @@ class AdminUsersController extends Controller
 
     public function trash(Request $request, Response $response)
     {
-        if($request->isPost()){
+        if ($request->isPost()) {
             if ($request->post("del_id")) {
                 $id = $request->post("del_id");
-                dd($id);
 
                 $params = [
                     'conditions' => "id = :id",
                     'bind' => ['id' => $id]
                 ];
                 $user = Users::findFirst($params);
-                dd($user);
 
-                // $this->json_response($user);
+                if ($user) {
+                    $user->delete();
+                }
             }
         }
+    }
+
+    public function details(Request $request, Response $response)
+    {
+        if ($request->isPost()) {
+            if ($request->post("info_id")) {
+                $id = $request->post("info_id");
+
+                $params = [
+                    'conditions' => "id = :id",
+                    'bind' => ['id' => $id]
+                ];
+                $user = Users::findFirst($params);
+
+                if ($user) {
+                    $this->json_response($user);
+                }
+            }
+        }
+    }
+
+    private function generate_excel()
+    {
+        // Create a new Spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        $data = Users::find();
+
+            // Define headers
+            $worksheet->setCellValue('A1', 'ID');
+            $worksheet->setCellValue('B1', 'Slug');
+            $worksheet->setCellValue('C1', 'Surname');
+            $worksheet->setCellValue('D1', 'Name');
+            $worksheet->setCellValue('E1', 'Email');
+            $worksheet->setCellValue('F1', 'Phone');
+
+            // Start row for data
+            $row = 2;
+
+            // Loop through the database data
+            foreach ($data as $row_data) {
+                $worksheet->setCellValue('A' . $row, $row_data->id); // ID
+                $worksheet->setCellValue('B' . $row, $row_data->slug); // Slug
+                $worksheet->setCellValue('C' . $row, $row_data->surname); // Surname
+                $worksheet->setCellValue('D' . $row, $row_data->name); // Name
+                $worksheet->setCellValue('E' . $row, $row_data->email); // Email
+                $worksheet->setCellValue('F' . $row, $row_data->phone); // Phone
+
+                // Increment row counter
+                $row++;
+            }
+
+            $worksheet->getColumnDimension('A')->setWidth(20);
+            $worksheet->getColumnDimension('B')->setWidth(20);
+            $worksheet->getColumnDimension('C')->setWidth(25);
+            $worksheet->getColumnDimension('D')->setWidth(25);
+            $worksheet->getColumnDimension('E')->setWidth(30);
+            $worksheet->getColumnDimension('F')->setWidth(25);
+
+            $border = new Border();
+            $border->setBorderStyle(Border::BORDER_THIN);
+
+            $worksheet->getStyle('A1:C1')->getBorders()->applyFromArray([
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                ],
+            ]);
+
+
+            $fill = new Fill();
+            $fill->setFillType(Fill::FILL_SOLID);
+            $fill->getStartColor()->setARGB('000000'); // Yellow
+
+            $worksheet->getStyle('A1:F1')->getFill()->applyFromArray([
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => '000000',
+                ],
+            ]);
+
+
+            $font = new Font();
+            $font->setBold(true);
+            $font->setColor(new Color(Color::COLOR_WHITE));
+            $font->setSize(14);
+
+            $worksheet->getStyle('A1:F1')->getFont()->applyFromArray([
+                'bold' => true,
+                'color' => [
+                    'rgb' => 'FFFFFF',
+                ],
+                'size' => 14,
+            ]);
+
+            // Save the Excel file
+            $writer = new Xlsx($spreadsheet);
+            $excelFilename = 'users.xlsx'; // Change to your desired file name
+            $writer->save($excelFilename);
+
+            // Provide download link
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $excelFilename . '"');
+            header('Cache-Control: max-age=0');
+            readfile($excelFilename);
     }
 }

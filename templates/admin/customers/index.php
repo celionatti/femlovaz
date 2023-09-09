@@ -8,12 +8,12 @@ use App\Core\Support\Helpers\Token;
 <?php $this->start("content") ?>
 <div class="row">
     <div class="col-lg-6">
-        <h4 class="mt-2 text-primary">All users</h4>
+        <h4 class="mt-2 text-primary">All Customers</h4>
     </div>
     <div class="col-lg-6">
-        <button type="button" class="btn btn-primary m-1 float-end" data-bs-toggle="modal" data-bs-target="#addUser"><i class="bi bi-person-add"></i> Add New User</button>
+        <button type="button" class="btn btn-primary m-1 float-end" data-bs-toggle="modal" data-bs-target="#addCustomer"><i class="bi bi-person-add"></i> Add New Customer</button>
 
-        <a href="<?= Config::get("domain") ?>admin/users?export=excel" class="btn btn-success m-1 float-end"><i class="bi bi-table"></i> Export to Excel</a>
+        <a href="<?= Config::get("domain") ?>admin/customers?export=excel" class="btn btn-success m-1 float-end"><i class="bi bi-table"></i> Export to Excel</a>
     </div>
 </div>
 <hr class="my-1">
