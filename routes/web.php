@@ -4,6 +4,7 @@
 
 use App\controllers\SiteController;
 use App\controllers\AdminController;
+use App\controllers\AdminCustomersController;
 use App\controllers\AdminUsersController;
 
 $app->router->get('/', [SiteController::class, 'index']);
@@ -18,6 +19,14 @@ $app->router->post('/admin/users/create', [AdminUsersController::class, 'create_
 $app->router->post('/admin/users/edit', [AdminUsersController::class, 'edit_user']);
 $app->router->post('/admin/users/trash', [AdminUsersController::class, 'trash']);
 $app->router->post('/admin/users/details', [AdminUsersController::class, 'details']);
+
+// Admin Customers
+$app->router->get('/admin/customers', [AdminCustomersController::class, 'customers']);
+$app->router->post('/admin/customers', [AdminCustomersController::class, 'show_customers']);
+$app->router->post('/admin/customers/create', [AdminCustomersController::class, 'create_customer']);
+$app->router->post('/admin/customers/edit', [AdminCustomersController::class, 'edit_customer']);
+$app->router->post('/admin/customers/trash', [AdminCustomersController::class, 'trash']);
+$app->router->post('/admin/customers/details', [AdminCustomersController::class, 'details']);
 
 $app->router->get('/admin/stocks', [AdminController::class, 'stocks']);
 $app->router->get('/admin/inquiries', [AdminController::class, 'inquiries']);
