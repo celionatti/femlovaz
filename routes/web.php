@@ -5,6 +5,7 @@
 use App\controllers\SiteController;
 use App\controllers\AdminController;
 use App\controllers\AdminCustomersController;
+use App\controllers\AdminPaymentsController;
 use App\controllers\AdminUsersController;
 
 $app->router->get('/', [SiteController::class, 'index']);
@@ -27,6 +28,11 @@ $app->router->post('/admin/customers/create', [AdminCustomersController::class, 
 $app->router->post('/admin/customers/edit', [AdminCustomersController::class, 'edit_customer']);
 $app->router->post('/admin/customers/trash', [AdminCustomersController::class, 'trash']);
 $app->router->post('/admin/customers/details', [AdminCustomersController::class, 'details']);
+
+//Admin Payments
+$app->router->get('/admin/payments', [AdminPaymentsController::class, 'payments']);
+$app->router->get('/admin/payments/sales', [AdminPaymentsController::class, 'sales']);
+$app->router->get('/admin/payments/subscriptions', [AdminPaymentsController::class, 'subscriptions']);
 
 $app->router->get('/admin/stocks', [AdminController::class, 'stocks']);
 $app->router->get('/admin/inquiries', [AdminController::class, 'inquiries']);

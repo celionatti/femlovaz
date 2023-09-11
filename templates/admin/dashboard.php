@@ -80,5 +80,19 @@ $this->setTitle(Config::get('title') . ' | Admin | Dashboard');
         </div>
     </div>
     <!-- // Card -->
+    <!-- Card -->
+    <div class="col-xl-4 col-md-6 my-1">
+        <div class="card bg-primary text-white text-center">
+            <div class="card-body">
+                <h1 class="m-0 bi bi-wallet2 display-1"></h1>
+                <h2 class="m-0">Payments</h2>
+            </div>
+            <div class="card-footer">
+                <a class="small text-white stretched-link" href="<?= Config::get('domain') ?>admin/payments">View Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+    <!-- // Card -->
 </div>
 <?php $this->end() ?>

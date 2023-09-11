@@ -8,67 +8,75 @@ use App\Core\Support\Helpers\Token;
 <?php $this->start("content") ?>
 <div class="row">
     <div class="col-lg-6">
-        <h4 class="mt-2 text-primary">Customers</h4>
+        <h4 class="mt-2 text-primary">Sales (Payments)</h4>
     </div>
     <div class="col-lg-6">
-        <button type="button" class="btn btn-primary btn-sm m-1 float-end" data-bs-toggle="modal" data-bs-target="#addCustomer"><i class="bi bi-person-add"></i> New Customer</button>
+        <button type="button" class="btn btn-primary btn-sm m-1 float-end" data-bs-toggle="modal" data-bs-target="#addSale"><i class="bi bi-cart-plus"></i> New Sale</button>
 
-        <a href="<?= Config::get("domain") ?>admin/customers?export=excel" class="btn btn-success btn-sm m-1 float-end"><i class="bi bi-table"></i> Export to Excel</a>
+        <a href="<?= Config::get("domain") ?>admin/payments/sales?export=excel" class="btn btn-success btn-sm m-1 float-end"><i class="bi bi-table"></i> Export to Excel</a>
     </div>
 </div>
 <hr class="my-1">
 <div class="row">
     <div class="col-lg-12">
-        <div class="table-responsive" id="showcustomers">
+        <div class="table-responsive" id="showsales">
             <h3 class="text-center text-primary" style="margin-top: 150px;">Loading...</h3>
         </div>
     </div>
 </div>
 
-<!-- Add Customer Modal -->
-<div class="modal fade" id="addCustomer">
+<!-- Add Sales Modal -->
+<div class="modal fade" id="addSale">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Create New Customer</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">New Sales Payment</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="" method="post" id="form-data">
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-person"></i></span>
-                        <input type="text" class="form-control" name="name" placeholder="Name" aria-label="Name" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-person-lines-fill"></i></span>
-                        <input type="text" class="form-control" name="othername" placeholder="Othername" aria-label="Othername" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-envelope-at"></i></span>
-                        <input type="text" class="form-control" name="email" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-telephone"></i></span>
-                        <input type="text" class="form-control" name="phone" placeholder="Phone" aria-label="Phone" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-geo-alt"></i></span>
-                        <input type="text" class="form-control" name="address" placeholder="Address" aria-label="Address" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-cassette"></i></span>
-                        <select class="form-control" name="decoder_type" placeholder="Decoder Type" aria-label="Decoder Type" aria-describedby="addon-wrapping">
-                            <option value="">Decoder Type</option>
-                            <option value="gotv">Gotv</option>
-                            <option value="dstv">Dstv</option>
+                <div class="input-group flex-nowrap mb-3">
+                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-ticket-detailed"></i></span>
+                        <select class="form-control" name="name" placeholder="Name" aria-label="Name" aria-describedby="addon-wrapping">
+                            <option value="">Select Name/Inventory</option>
+                            <option value="success">Success</option>
+                            <option value="failed">Failed</option>
+                            <option value="pending">Pending</option>
                         </select>
                     </div>
                     <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-123"></i></span>
-                        <input type="text" class="form-control" name="iuc_number" placeholder="IUC Number" aria-label="IUC Number" aria-describedby="addon-wrapping">
+                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-cash"></i></span>
+                        <input type="text" class="form-control" name="amount" placeholder="Amount" aria-label="Amount" aria-describedby="addon-wrapping">
+                    </div>
+                    <div class="input-group flex-nowrap mb-3">
+                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-percent"></i></span>
+                        <input type="number" class="form-control" name="qty" placeholder="Quantity" aria-label="Quantity" aria-describedby="addon-wrapping">
+                    </div>
+                    <div class="input-group flex-nowrap mb-3">
+                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-wallet2"></i></span>
+                        <select class="form-control" name="payment_method" placeholder="Payment Method" aria-label="Payment Method" aria-describedby="addon-wrapping">
+                            <option value="">Payment Method</option>
+                            <option value="cash">Cash</option>
+                            <option value="pos">POS</option>
+                            <option value="transfer">Transfer</option>
+                            <option value="web">WEB</option>
+                        </select>
+                    </div>
+                    <div class="input-group flex-nowrap mb-3">
+                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-journal-text"></i></span>
+                        <input type="text" class="form-control" name="note" placeholder="Note" aria-label="Note" aria-describedby="addon-wrapping">
+                    </div>
+                    <div class="input-group flex-nowrap mb-3">
+                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-info-circle"></i></span>
+                        <select class="form-control" name="status" placeholder="Status" aria-label="Status" aria-describedby="addon-wrapping">
+                            <option value="">Select Status</option>
+                            <option value="success">Success</option>
+                            <option value="failed">Failed</option>
+                            <option value="pending">Pending</option>
+                        </select>
                     </div>
                     <div class="input-group flex-nowrap">
-                        <input type="submit" class="btn btn-dark btn-sm w-100" id="insert" value="Add Customer">
+                        <input type="submit" class="btn btn-dark btn-sm w-100" id="insert" value="Add Sale">
                     </div>
                 </form>
             </div>
