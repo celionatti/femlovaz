@@ -4,9 +4,10 @@
 
 use App\controllers\SiteController;
 use App\controllers\AdminController;
-use App\controllers\AdminCustomersController;
-use App\controllers\AdminPaymentsController;
 use App\controllers\AdminUsersController;
+use App\controllers\AdminStocksController;
+use App\controllers\AdminPaymentsController;
+use App\controllers\AdminCustomersController;
 
 $app->router->get('/', [SiteController::class, 'index']);
 $app->router->get('/users/{id}', [SiteController::class, 'users']);
@@ -32,9 +33,21 @@ $app->router->post('/admin/customers/details', [AdminCustomersController::class,
 //Admin Payments
 $app->router->get('/admin/payments', [AdminPaymentsController::class, 'payments']);
 $app->router->get('/admin/payments/sales', [AdminPaymentsController::class, 'sales']);
+$app->router->post('/admin/payments/sales', [AdminPaymentsController::class, 'show_sales']);
+$app->router->post('/admin/payments/sales/create', [AdminPaymentsController::class, 'create_sale']);
+$app->router->post('/admin/payments/sales/edit', [AdminPaymentsController::class, 'edit_sale']);
+$app->router->post('/admin/payments/sales/trash', [AdminPaymentsController::class, 'trash_sale']);
+
 $app->router->get('/admin/payments/subscriptions', [AdminPaymentsController::class, 'subscriptions']);
 
-$app->router->get('/admin/stocks', [AdminController::class, 'stocks']);
+//Admin Stocks
+$app->router->get('/admin/stocks', [AdminStocksController::class, 'stocks']);
+$app->router->post('/admin/stocks', [AdminStocksController::class, 'show_stocks']);
+$app->router->post('/admin/stocks/create', [AdminStocksController::class, 'create_stock']);
+$app->router->post('/admin/stocks/edit', [AdminStocksController::class, 'edit_stock']);
+$app->router->post('/admin/stocks/trash', [AdminStocksController::class, 'trash']);
+$app->router->post('/admin/stocks/details', [AdminStocksController::class, 'details']);
+
 $app->router->get('/admin/inquiries', [AdminController::class, 'inquiries']);
 $app->router->get('/admin/help-center', [AdminController::class, 'help_center']);
 $app->router->get('/admin/book-keeping', [AdminController::class, 'book_keeping']);
