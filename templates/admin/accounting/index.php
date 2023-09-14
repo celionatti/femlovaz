@@ -8,63 +8,46 @@ use App\Core\Support\Helpers\Token;
 <?php $this->start("content") ?>
 <div class="row">
     <div class="col-lg-6">
-        <h4 class="mt-2 text-primary">Sales (Payments)</h4>
+        <h4 class="mt-2 text-primary"></h4>
     </div>
     <div class="col-lg-6">
-        <button type="button" class="btn btn-primary btn-sm m-1 float-end" data-bs-toggle="modal" data-bs-target="#addSale"><i class="bi bi-cart-plus"></i> New Sale</button>
-
-        <a href="<?= Config::get("domain") ?>admin/payments/sales?export=excel" class="btn btn-success btn-sm m-1 float-end"><i class="bi bi-table"></i> Export to Excel</a>
+        <button type="button" class="btn btn-primary btn-sm m-1 float-end" data-bs-toggle="modal" data-bs-target="#addFlow"><i class="bi bi-plus-circle-dotted"></i> New Flow</button>
     </div>
 </div>
 <hr class="my-1">
 <div class="row">
     <div class="col-lg-12">
-        <div class="table-responsive" id="showsales">
+        <div class="table-responsive" id="showflows">
             <h3 class="text-center text-primary" style="margin-top: 150px;">Loading...</h3>
         </div>
     </div>
 </div>
 
-<!-- Add Sales Modal -->
-<div class="modal fade" id="addSale">
+<!-- Add ward Modal -->
+<div class="modal fade" id="addFlow">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">New Sales Payment</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">New Flow (Credit/Debit)</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="" method="post" id="form-data">
-                <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-ticket-detailed"></i></span>
-                        <select class="form-control" name="name" placeholder="Name" aria-label="Name" aria-describedby="addon-wrapping">
-                            <option value="">Select Name/Inventory</option>
-                            <?php foreach($stocks as $key => $value): ?>
-                                <option value="<?= $value->name ?>"><?= $value->name ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
                     <div class="input-group flex-nowrap mb-3">
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-cash"></i></span>
-                        <input type="text" class="form-control" name="amount" placeholder="Amount" aria-label="Amount" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-percent"></i></span>
-                        <input type="number" class="form-control" name="qty" placeholder="Quantity" aria-label="Quantity" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-wallet2"></i></span>
-                        <select class="form-control" name="payment_method" placeholder="Payment Method" aria-label="Payment Method" aria-describedby="addon-wrapping">
-                            <option value="">Payment Method</option>
-                            <option value="cash">Cash</option>
-                            <option value="pos">POS</option>
-                            <option value="transfer">Transfer</option>
-                            <option value="web">WEB</option>
-                        </select>
+                        <input type="number" class="form-control" name="amount" placeholder="Amount" aria-label="Amount" aria-describedby="addon-wrapping">
                     </div>
                     <div class="input-group flex-nowrap mb-3">
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-journal-text"></i></span>
-                        <input type="text" class="form-control" name="note" placeholder="Note" aria-label="Note" aria-describedby="addon-wrapping">
+                        <input type="text" class="form-control" name="details" placeholder="Details" aria-label="Details" aria-describedby="addon-wrapping">
+                    </div>
+                    <div class="input-group flex-nowrap mb-3">
+                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-ticket-detailed"></i></span>
+                        <select class="form-control" name="flow_type" placeholder="Flow Type" aria-label="Flow Type" aria-describedby="addon-wrapping">
+                            <option value="">Select Flow Type</option>
+                            <option value="credit">Credit (Inwards)</option>
+                            <option value="debit">Debit (Expenses)</option>
+                        </select>
                     </div>
                     <div class="input-group flex-nowrap mb-3">
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-info-circle"></i></span>
@@ -76,7 +59,7 @@ use App\Core\Support\Helpers\Token;
                         </select>
                     </div>
                     <div class="input-group flex-nowrap">
-                        <input type="submit" class="btn btn-dark btn-sm w-100" id="insert" value="Add Sale">
+                        <input type="submit" class="btn btn-dark btn-sm w-100" id="insert" value="Add Flow">
                     </div>
                 </form>
             </div>
@@ -85,47 +68,33 @@ use App\Core\Support\Helpers\Token;
 </div>
 <!-- Modal -->
 
-<!-- Edit Customer Modal -->
-<div class="modal fade" id="editSale">
+<!-- Edit ward Modal -->
+<div class="modal fade" id="editFlow">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Sale</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Flow (Credit/Debit)</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="" method="post" id="edit-form-data">
                     <input type="hidden" name="id" id="id">
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-ticket-detailed"></i></span>
-                        <select class="form-control" name="name" id="name" placeholder="Name" aria-label="Name" aria-describedby="addon-wrapping">
-                            <option value="">Select Name/Inventory</option>
-                            <?php foreach($stocks as $key => $value): ?>
-                                <option value="<?= $value->name ?>"><?= $value->name ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                    <input type="hidden" name="flow_id" id="flow_id">
                     <div class="input-group flex-nowrap mb-3">
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-cash"></i></span>
-                        <input type="text" class="form-control" name="amount" id="amount" placeholder="Amount" aria-label="Amount" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-percent"></i></span>
-                        <input type="number" class="form-control" name="qty" id="qty" placeholder="Quantity" aria-label="Quantity" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-wallet2"></i></span>
-                        <select class="form-control" name="payment_method" id="payment_method" placeholder="Payment Method" aria-label="Payment Method" aria-describedby="addon-wrapping">
-                            <option value="">Payment Method</option>
-                            <option value="cash">Cash</option>
-                            <option value="pos">POS</option>
-                            <option value="transfer">Transfer</option>
-                            <option value="web">WEB</option>
-                        </select>
+                        <input type="number" class="form-control" name="amount" id="amount" placeholder="Amount" aria-label="Amount" aria-describedby="addon-wrapping">
                     </div>
                     <div class="input-group flex-nowrap mb-3">
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-journal-text"></i></span>
-                        <input type="text" class="form-control" name="note" id="note" placeholder="Note" aria-label="Note" aria-describedby="addon-wrapping">
+                        <input type="text" class="form-control" name="details" id="details" placeholder="Details" aria-label="Details" aria-describedby="addon-wrapping">
+                    </div>
+                    <div class="input-group flex-nowrap mb-3">
+                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-ticket-detailed"></i></span>
+                        <select class="form-control" name="flow_type" id="flow_type" placeholder="Flow Type" aria-label="Flow Type" aria-describedby="addon-wrapping">
+                            <option value="">Select Flow Type</option>
+                            <option value="credit">Credit (Inwards)</option>
+                            <option value="debit">Debit (Expenses)</option>
+                        </select>
                     </div>
                     <div class="input-group flex-nowrap mb-3">
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-info-circle"></i></span>
@@ -137,7 +106,7 @@ use App\Core\Support\Helpers\Token;
                         </select>
                     </div>
                     <div class="input-group flex-nowrap">
-                        <input type="submit" class="btn btn-dark btn-sm w-100" id="update" value="Edit Sale">
+                        <input type="submit" class="btn btn-dark btn-sm w-100" id="update" value="Edit Flow">
                     </div>
                 </form>
             </div>
@@ -145,24 +114,25 @@ use App\Core\Support\Helpers\Token;
     </div>
 </div>
 <!-- Modal -->
+
 <?php $this->end() ?>
 
 <?php $this->start("script") ?>
 <script>
     $(document).ready(function() {
 
-        showAllSales();
+        showAllTransactions();
 
         // Show All Sales.
-        function showAllSales() {
+        function showAllTransactions() {
             $.ajax({
-                url: "<?= Config::get("domain") ?>admin/payments/sales",
+                url: "<?= Config::get("domain") ?>admin/book-keeping/all",
                 type: "POST",
                 data: {
-                    action: "view-sales"
+                    action: "view-flows"
                 },
                 success: function(response) {
-                    $("#showsales").html(response);
+                    $("#showflows").html(response);
                     $("table").DataTable({
                         order: [0, 'desc']
                     });
@@ -170,33 +140,33 @@ use App\Core\Support\Helpers\Token;
             });
         }
 
-        // Create New Sale.
+        // Create New Transaction.
         $("#insert").click(function(e) {
             if ($("#form-data")[0].checkValidity()) {
                 e.preventDefault();
                 $.ajax({
-                    url: "<?= Config::get("domain") ?>admin/payments/sales/create",
+                    url: "<?= Config::get("domain") ?>admin/book-keeping/create",
                     type: "POST",
                     data: $("#form-data").serialize() + "&action=insert",
                     success: function(response) {
                         Swal.fire({
-                            title: 'Sale added successfully!',
+                            title: 'Flow added successfully!',
                             icon: 'success'
                         })
-                        $("#addSale").modal('hide');
+                        $("#addFlow").modal('hide');
                         $("#form-data")[0].reset();
-                        showAllSales();
+                        showAllTransactions();
                     }
                 });
             }
         });
 
-        // Edit User.
+        // Edit Flow.
         $("body").on("click", ".editBtn", function(e) {
             e.preventDefault();
             edit_id = $(this).attr('id');
             $.ajax({
-                url: "<?= Config::get("domain") ?>admin/payments/sales/edit",
+                url: "<?= Config::get("domain") ?>admin/book-keeping/edit",
                 type: "POST",
                 data: {
                     edit_id: edit_id
@@ -204,39 +174,37 @@ use App\Core\Support\Helpers\Token;
                 success: function(response) {
                     data = response;
                     $("#id").val(data.id);
-                    $("#slug").val(data.slug);
-                    $("#name").val(data.name);
+                    $("#flow_id").val(data.flow_id);
                     $("#amount").val(data.amount);
-                    $("#qty").val(data.qty);
-                    $("#payment_method").val(data.payment_method);
-                    $("#note").val(data.note);
+                    $("#details").val(data.details);
+                    $("#flow_type").val(data.flow_type);
                     $("#status").val(data.status);
                 }
             });
         });
 
-        // Update Customer.
+        // Update Flow.
         $("#update").click(function(e) {
             if ($("#edit-form-data")[0].checkValidity()) {
                 e.preventDefault();
                 $.ajax({
-                    url: "<?= Config::get("domain") ?>admin/payments/sales/edit",
+                    url: "<?= Config::get("domain") ?>admin/book-keeping/edit",
                     type: "POST",
                     data: $("#edit-form-data").serialize() + "&action=update",
                     success: function(response) {
                         Swal.fire({
-                            title: 'Sale updated successfully!',
+                            title: 'Flow updated successfully!',
                             icon: 'success'
                         })
-                        $("#editSale").modal('hide');
+                        $("#editFlow").modal('hide');
                         $("#edit-form-data")[0].reset();
-                        showAllSales();
+                        showAllTransactions();
                     }
                 });
             }
         });
 
-        // Delete Customer
+        // Delete Flow
         $("body").on("click", ".delBtn", function(e) {
             e.preventDefault();
             let tr = $(this).closest("tr");
@@ -252,7 +220,7 @@ use App\Core\Support\Helpers\Token;
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "<?= Config::get("domain") ?>admin/payments/sales/trash",
+                        url: "<?= Config::get("domain") ?>admin/book-keeping/trash",
                         type: "POST",
                         data: {
                             del_id: del_id
@@ -261,10 +229,10 @@ use App\Core\Support\Helpers\Token;
                             tr.css('background-color', '#ff6666');
                             Swal.fire(
                                 'Deleted!',
-                                'Sale deleted Successfully.!',
+                                'Flow deleted Successfully.!',
                                 'success'
                             )
-                            showAllSales();
+                            showAllTransactions();
                         }
                     });
                 }

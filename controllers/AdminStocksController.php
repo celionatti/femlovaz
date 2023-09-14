@@ -29,7 +29,7 @@ class AdminStocksController extends Controller
         $view = [
             'navigations' => [
                 ['label' => 'Dashboard', 'url' => 'admin'],
-                ['label' => 'Customers', 'url' => '']
+                ['label' => 'Stocks', 'url' => '']
             ],
         ];
         $this->view->render('admin/stocks/index', $view);

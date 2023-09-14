@@ -2,6 +2,7 @@
 
 /** @var TYPE_NAME $app */
 
+use App\controllers\AdminAccountingController;
 use App\controllers\SiteController;
 use App\controllers\AdminController;
 use App\controllers\AdminUsersController;
@@ -39,6 +40,10 @@ $app->router->post('/admin/payments/sales/edit', [AdminPaymentsController::class
 $app->router->post('/admin/payments/sales/trash', [AdminPaymentsController::class, 'trash_sale']);
 
 $app->router->get('/admin/payments/subscriptions', [AdminPaymentsController::class, 'subscriptions']);
+$app->router->post('/admin/payments/subscriptions', [AdminPaymentsController::class, 'show_subscriptions']);
+$app->router->post('/admin/payments/subscriptions/create', [AdminPaymentsController::class, 'create_subscription']);
+$app->router->post('/admin/payments/subscriptions/edit', [AdminPaymentsController::class, 'edit_subscription']);
+$app->router->post('/admin/payments/subscriptions/trash', [AdminPaymentsController::class, 'trash_subscription']);
 
 //Admin Stocks
 $app->router->get('/admin/stocks', [AdminStocksController::class, 'stocks']);
@@ -50,4 +55,9 @@ $app->router->post('/admin/stocks/details', [AdminStocksController::class, 'deta
 
 $app->router->get('/admin/inquiries', [AdminController::class, 'inquiries']);
 $app->router->get('/admin/help-center', [AdminController::class, 'help_center']);
-$app->router->get('/admin/book-keeping', [AdminController::class, 'book_keeping']);
+
+$app->router->get('/admin/book-keeping', [AdminAccountingController::class, 'book_keeping']);
+$app->router->post('/admin/book-keeping/all', [AdminAccountingController::class, 'show_all']);
+$app->router->post('/admin/book-keeping/create', [AdminAccountingController::class, 'create_flow']);
+$app->router->post('/admin/book-keeping/edit', [AdminAccountingController::class, 'edit_flow']);
+$app->router->post('/admin/book-keeping/trash', [AdminAccountingController::class, 'trash_flow']);

@@ -6,9 +6,9 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Controller;
 use App\Core\Support\Helpers\TimeFormat;
-use App\models\Customers;
 use App\models\Sales;
 use App\models\Stocks;
+use App\models\Subscriptions;
 
 class AdminPaymentsController extends Controller
 {
@@ -28,8 +28,7 @@ class AdminPaymentsController extends Controller
         $view = [
             'navigations' => [
                 ['label' => 'Dashboard', 'url' => 'admin'],
-                ['label' => 'Payments', 'url' => 'admin/payments'],
-                ['label' => 'Sales', 'url' => '']
+                ['label' => 'Payments', 'url' => ''],
             ],
         ];
         $this->view->render('admin/payments/index', $view);
@@ -93,13 +92,13 @@ class AdminPaymentsController extends Controller
                 foreach ($data as $key => $row) {
                     $output .= '<tr class="text-center text-scondary">
                     <td>' . $key + 1 . '</td>
-                    <td>' . $row->name . '</td>
+                    <td class="text-capitalize">' . $row->name . '</td>
                     <td>' .'N '. number_format($row->amount, 2) . '</td>
                     <td>' . $row->qty . '</td>
-                    <td>' . $row->payment_method . '</td>
+                    <td class="text-capitalize">' . $row->payment_method . '</td>
                     <td>' . $row->note . '</td>
                     <td>' . TimeFormat::DateOne($row->created_at) . '</td>
-                    <td>' . $row->status . '</td>
+                    <td class="text-capitalize '.statusMode($row->status).'">' . $row->status . '</td>
                     <td>
                     <a href="#" title="Edit Sale" class="text-primary editBtn" id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#editSale"><i class="bi bi-pencil-square fs-5"></i></a>&nbsp;&nbsp;
 
@@ -147,11 +146,10 @@ class AdminPaymentsController extends Controller
 
             if ($request->post("action") && $request->post("action") === "update") {
                 $id = $request->post("id");
-                $slug = $request->post("slug");
 
                 $params = [
-                    'conditions' => "id = :id AND slug = :slug",
-                    'bind' => ['id' => $id, 'slug' => $slug]
+                    'conditions' => "id = :id",
+                    'bind' => ['id' => $id]
                 ];
                 $sale = Sales::findFirst($params);
 
@@ -208,7 +206,135 @@ class AdminPaymentsController extends Controller
                 ['label' => 'Payments', 'url' => 'admin/payments'],
                 ['label' => 'Subscriptions', 'url' => '']
             ],
+            'decoderOpts' => [
+                Subscriptions::DECODER_DSTV => "Dstv",
+                Subscriptions::DECODER_GOTV => "Gotv",
+                Subscriptions::DECODER_FREE_TO_AIR => "Free To Air"
+            ],
         ];
         $this->view->render('admin/payments/subscriptions/index', $view);
+    }
+
+     /**
+     * @throws Exception
+     */
+    public function show_subscriptions(Request $request, Response $response)
+    {
+        if ($request->isPost()) {
+            $output = '';
+
+            if ($request->post("action") && $request->post("action") === "view-subscriptions") {
+                $data = Subscriptions::find();
+                $output .= '<table class="table table-striped table-sm table-bordered">
+                <thead>
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>Transaction ID</th>
+                        <th>Amount</th>
+                        <th>Name</th>
+                        <th>IUC Number</th>
+                        <th>Decoder Type</th>
+                        <th>Payment Method</th>
+                        <th>Note</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>';
+
+                foreach ($data as $key => $row) {
+                    $output .= '<tr class="text-center text-secondary">
+                    <td>' . $key + 1 . '</td>
+                    <td>' . $row->transaction_id . '</td>
+                    <td>' .'N '. number_format($row->amount, 2) . '</td>
+                    <td class="text-capitalize">' . $row->name . '</td>
+                    <td>' . $row->iuc_number . '</td>
+                    <td class="text-capitalize">' . $row->decoder_type . '</td>
+                    <td class="text-capitalize">' . $row->payment_method . '</td>
+                    <td>' . $row->note . '</td>
+                    <td>' . TimeFormat::DateOne($row->created_at) . '</td>
+                    <td class="text-capitalize '.statusMode($row->status).'">' . $row->status . '</td>
+                    <td>
+                    <a href="#" title="Edit Subscription" class="text-primary editBtn" id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#editSubscription"><i class="bi bi-pencil-square fs-5"></i></a>&nbsp;&nbsp;
+
+                    <a href="#" title="Delete Subscription" class="text-danger delBtn" id="' . $row->id . '"><i class="bi bi-trash fs-5"></i></a>
+                    </td></tr>
+                    ';
+                }
+                $output .= '</tbody></table>';
+                $this->json_response($output);
+            } else {
+                return '<h3 class="text-center text-secondary mt-5">:( No subscription present in the database!</h3>';
+            }
+        }
+    }
+
+    public function create_subscription(Request $request, Response $response)
+    {
+        if ($request->isPost()) {
+            // Insert new Sales.
+            $subscription = new Subscriptions();
+
+            if ($request->post("action") && $request->post("action") === "insert") {
+                $subscription->loadData($request->getBody());
+                if (empty($subscription->getErrors())) {
+                    $subscription->save();
+                }
+            }
+        }
+    }
+
+    public function edit_subscription(Request $request, Response $response)
+    {
+        if ($request->isPost()) {
+            if ($request->post("edit_id")) {
+                $id = $request->post("edit_id");
+
+                $params = [
+                    'conditions' => "id = :id",
+                    'bind' => ['id' => $id]
+                ];
+                $subscription = Subscriptions::findFirst($params);
+
+                $this->json_response($subscription);
+            }
+
+            if ($request->post("action") && $request->post("action") === "update") {
+                $id = $request->post("id");
+
+                $params = [
+                    'conditions' => "id = :id",
+                    'bind' => ['id' => $id]
+                ];
+                $subscription = Subscriptions::findFirst($params);
+
+                if ($subscription) {
+                    $subscription->loadData($request->getBody());
+                    if (empty($subscription->getErrors())) {
+                        $subscription->save();
+                    }
+                }
+            }
+        }
+    }
+
+    public function trash_subscription(Request $request, Response $response)
+    {
+        if ($request->isPost()) {
+            if ($request->post("del_id")) {
+                $id = $request->post("del_id");
+
+                $params = [
+                    'conditions' => "id = :id",
+                    'bind' => ['id' => $id]
+                ];
+                $subscription = Subscriptions::findFirst($params);
+
+                if ($subscription) {
+                    $subscription->delete();
+                }
+            }
+        }
     }
 }

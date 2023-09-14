@@ -21,7 +21,6 @@ function dd($value): void
 
 function generate_csrf_token()
 {
-    
 }
 
 function urlIs($value)
@@ -301,4 +300,25 @@ function generateMetaDescription($content, $maxLength)
 
     // Return the generated meta description
     return $content;
+}
+
+function statusMode($data)
+{
+    if ($data === "success" || $data === "active" || $data === "credit") {
+        return "text-success";
+    } elseif ($data === "pending" || $data === "inactive" || $data === "none") {
+        return "text-warning";
+    } else {
+        return "text-danger";
+    }
+}
+
+
+function flowIcon($data)
+{
+    if ($data === "debit") {
+        return "bi bi-caret-up-fill";
+    } else {
+        return "bi bi-caret-down-fill";
+    }
 }

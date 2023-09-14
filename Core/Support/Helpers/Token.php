@@ -75,7 +75,11 @@ class Token
             $random = rand(0, 9);
             $text .= $array[$random];
         }
-        return $prefix . ':' . strtolower($text);
+
+        if(!empty($prefix)) {
+            return $prefix . ':' . strtolower($text);
+        }
+        return strtolower($text);
     }
 
     public static function RandomNumber($length): string
