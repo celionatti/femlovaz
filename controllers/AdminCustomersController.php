@@ -189,24 +189,28 @@ class AdminCustomersController extends Controller
         $data = Customers::find();
 
             // Define headers
-            $worksheet->setCellValue('A1', 'ID');
-            $worksheet->setCellValue('B1', 'Slug');
-            $worksheet->setCellValue('C1', 'Surname');
-            $worksheet->setCellValue('D1', 'Name');
-            $worksheet->setCellValue('E1', 'Email');
-            $worksheet->setCellValue('F1', 'Phone');
+            $worksheet->setCellValue('A1', 'Surname');
+            $worksheet->setCellValue('B1', 'Name');
+            $worksheet->setCellValue('C1', 'Email');
+            $worksheet->setCellValue('D1', 'Phone');
+            $worksheet->setCellValue('E1', 'Address');
+            $worksheet->setCellValue('F1', 'Decoder Type');
+            $worksheet->setCellValue('G1', 'IUC Number');
+            $worksheet->setCellValue('H1', 'Status');
 
             // Start row for data
             $row = 2;
 
             // Loop through the database data
             foreach ($data as $row_data) {
-                $worksheet->setCellValue('A' . $row, $row_data->id); // ID
-                $worksheet->setCellValue('B' . $row, $row_data->slug); // Slug
-                $worksheet->setCellValue('C' . $row, $row_data->surname); // Surname
-                $worksheet->setCellValue('D' . $row, $row_data->name); // Name
-                $worksheet->setCellValue('E' . $row, $row_data->email); // Email
-                $worksheet->setCellValue('F' . $row, $row_data->phone); // Phone
+                $worksheet->setCellValue('A' . $row, $row_data->name); // Name
+                $worksheet->setCellValue('B' . $row, $row_data->othername); // Othername
+                $worksheet->setCellValue('C' . $row, $row_data->email); // Email
+                $worksheet->setCellValue('D' . $row, $row_data->phone); // Phone
+                $worksheet->setCellValue('E' . $row, $row_data->address); // Address
+                $worksheet->setCellValue('F' . $row, $row_data->decoder_type); // Decpder Type
+                $worksheet->setCellValue('G' . $row, $row_data->iuc_number); // IUC Number
+                $worksheet->setCellValue('H' . $row, $row_data->status); // Status
 
                 // Increment row counter
                 $row++;
@@ -218,11 +222,13 @@ class AdminCustomersController extends Controller
             $worksheet->getColumnDimension('D')->setWidth(25);
             $worksheet->getColumnDimension('E')->setWidth(30);
             $worksheet->getColumnDimension('F')->setWidth(25);
+            $worksheet->getColumnDimension('G')->setWidth(20);
+            $worksheet->getColumnDimension('H')->setWidth(20);
 
             $border = new Border();
             $border->setBorderStyle(Border::BORDER_THIN);
 
-            $worksheet->getStyle('A1:C1')->getBorders()->applyFromArray([
+            $worksheet->getStyle('A1:H1')->getBorders()->applyFromArray([
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
                 ],
@@ -233,7 +239,7 @@ class AdminCustomersController extends Controller
             $fill->setFillType(Fill::FILL_SOLID);
             $fill->getStartColor()->setARGB('000000'); // Yellow
 
-            $worksheet->getStyle('A1:F1')->getFill()->applyFromArray([
+            $worksheet->getStyle('A1:H1')->getFill()->applyFromArray([
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => [
                     'argb' => '000000',
@@ -246,7 +252,7 @@ class AdminCustomersController extends Controller
             $font->setColor(new Color(Color::COLOR_WHITE));
             $font->setSize(14);
 
-            $worksheet->getStyle('A1:F1')->getFont()->applyFromArray([
+            $worksheet->getStyle('A1:H1')->getFont()->applyFromArray([
                 'bold' => true,
                 'color' => [
                     'rgb' => 'FFFFFF',
@@ -256,7 +262,7 @@ class AdminCustomersController extends Controller
 
             // Save the Excel file
             $writer = new Xlsx($spreadsheet);
-            $excelFilename = 'users.xlsx'; // Change to your desired file name
+            $excelFilename = 'customers.xlsx'; // Change to your desired file name
             $writer->save($excelFilename);
 
             // Provide download link

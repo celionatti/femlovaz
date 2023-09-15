@@ -1,7 +1,6 @@
 <?php
 
 use App\Core\Config;
-use App\Core\Support\Helpers\Token;
 
 ?>
 
@@ -12,6 +11,8 @@ use App\Core\Support\Helpers\Token;
     </div>
     <div class="col-lg-6">
         <button type="button" class="btn btn-primary btn-sm m-1 float-end" data-bs-toggle="modal" data-bs-target="#addFlow"><i class="bi bi-plus-circle-dotted"></i> New Flow</button>
+
+        <a href="<?= Config::get("domain") ?>admin/book-keeping?export=excel" class="btn btn-success btn-sm m-1 float-end"><i class="bi bi-table"></i> Export to Excel</a>
     </div>
 </div>
 <hr class="my-1">
