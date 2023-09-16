@@ -20,27 +20,32 @@ use App\Core\Support\FlashMessage;
     <title>
         <?= $this->getTitle() ?>
     </title>
-    <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/packages/aos/aos.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('packages/aos/aos.css'); ?>">
     <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/css/bootstrap.min.css'); ?>">
     <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/css/bootstrap-icons.css'); ?>">
-    <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/packages/boxicons/css/boxicons.min.css'); ?>">
-    <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/packages/glightbox/css/glightbox.min.css'); ?>">
-    <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/packages/remixicon/remixicon.css'); ?>">
-    <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/packages/swiper/swiper-bundle.min.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('packages/boxicons/css/boxicons.min.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('packages/glightbox/css/glightbox.min.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('packages/remixicon/remixicon.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('packages/swiper/swiper-bundle.min.css'); ?>">
     <link type="text/css" rel="stylesheet" href="<?= assets_path('css/style.css'); ?>">
     <meta name="author" content="<?= Config::get("author"); ?>">
     <?php $this->content('header') ?>
 </head>
 
-<body style="background: #eee">
+<body>
 
-    <div class="container-fluid">
-        <?= FlashMessage::bootstrap_alert(); ?>
-        <?php $this->content('content'); ?>
-    </div>
+    <?= FlashMessage::bootstrap_alert(); ?>
+    <?php $this->content('content'); ?>
 
     <script src="<?= assets_path('js/jquery-3.6.3.min.js'); ?>"></script>
+    <script src="<?= assets_path('packages/purecounter/purecounter_vanilla.js'); ?>"></script>
+    <script src="<?= assets_path('packages/aos/aos.js'); ?>"></script>
     <script src="<?= assets_path('bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
+    <script src="<?= assets_path('packages/glightbox/js/glightbox.min.js'); ?>"></script>
+    <script src="<?= assets_path('packages/isotope-layout/isotope.pkgd.min.js'); ?>"></script>
+    <script src="<?= assets_path('packages/swiper/swiper-bundle.min.js'); ?>"></script>
+
+    <script src="<?= assets_path('js/main.js'); ?>"></script>
 
     <?php $this->content('script') ?>
 
