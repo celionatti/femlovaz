@@ -20,9 +20,14 @@ use App\Core\Support\FlashMessage;
     <title>
         <?= $this->getTitle() ?>
     </title>
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/packages/aos/aos.css'); ?>">
     <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/css/bootstrap.min.css'); ?>">
     <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/css/bootstrap-icons.css'); ?>">
-    <link type="text/css" rel="stylesheet" href="<?= assets_path('css/styles.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/packages/boxicons/css/boxicons.min.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/packages/glightbox/css/glightbox.min.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/packages/remixicon/remixicon.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('bootstrap/packages/swiper/swiper-bundle.min.css'); ?>">
+    <link type="text/css" rel="stylesheet" href="<?= assets_path('css/style.css'); ?>">
     <meta name="author" content="<?= Config::get("author"); ?>">
     <?php $this->content('header') ?>
 </head>
