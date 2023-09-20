@@ -2,13 +2,14 @@
 
 /** @var TYPE_NAME $app */
 
-use App\controllers\AdminAccountingController;
 use App\controllers\SiteController;
 use App\controllers\AdminController;
+use App\controllers\AdminLoginController;
 use App\controllers\AdminUsersController;
 use App\controllers\AdminStocksController;
 use App\controllers\AdminPaymentsController;
 use App\controllers\AdminCustomersController;
+use App\controllers\AdminAccountingController;
 
 $app->router->get('/', [SiteController::class, 'index']);
 $app->router->get('/users/{id}', [SiteController::class, 'users']);
@@ -16,6 +17,9 @@ $app->router->get('/users/{id}', [SiteController::class, 'users']);
 
 // // Admin
 $app->router->get('/admin', [AdminController::class, 'admin']);
+$app->router->get('/admin/login', [AdminLoginController::class, 'login']);
+$app->router->post('/admin/login', [AdminLoginController::class, 'login']);
+
 $app->router->get('/admin/users', [AdminUsersController::class, 'users']);
 $app->router->post('/admin/users', [AdminUsersController::class, 'show_users']);
 $app->router->post('/admin/users/create', [AdminUsersController::class, 'create_user']);

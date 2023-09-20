@@ -15,12 +15,12 @@ class UserSessions extends DbModel
         return 'user_sessions';
     }
 
-    public static function findByUserId($user_id)
+    public static function findByUserSlug($user_slug)
     {
         return self::findFirst(
             [
                 'conditions' => "user_id = :user_id",
-                'bind' => ['user_id' => $user_id]
+                'bind' => ['user_id' => $user_slug]
             ]
         );
     }

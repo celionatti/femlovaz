@@ -14,6 +14,7 @@ use App\Core\Support\FlashMessage;
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= $csrfToken; ?>">
     <link rel="icon" href="<?= assets_path('img/favicon.png') ?>" />
     <link rel="apple-touch-icon" href="<?= assets_path('img/favicon.png') ?>" />
     <title>
@@ -33,8 +34,10 @@ use App\Core\Support\FlashMessage;
 
 <body>
 
+    <?php $this->partial('header') ?>
     <?= FlashMessage::bootstrap_alert(); ?>
     <?php $this->content('content'); ?>
+    <?php $this->partial('footer') ?>
 
     <script src="<?= assets_path('js/jquery-3.6.3.min.js'); ?>"></script>
     <script src="<?= assets_path('packages/purecounter/purecounter_vanilla.js'); ?>"></script>

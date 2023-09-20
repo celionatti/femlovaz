@@ -15,7 +15,7 @@ class SiteController extends Controller
 
     public function onConstruct(): void
     {
-        $this->view->setLayout('default');
+        $this->view->setLayout('main');
         $this->currentUser = Users::getCurrentUser();
     }
 
@@ -28,8 +28,6 @@ class SiteController extends Controller
         
         if ($request->isPost()) {
             $this->csrf->checkToken();
-            $users->setData($request->getBody());
-            $users->getData();
             dd($users);
         }
 

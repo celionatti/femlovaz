@@ -35,8 +35,8 @@ class Users extends DbModel
     public string $password = "";
     public string $confirm_password = "";
     public string $old_password = "";
-    public int $blocked = self::BLOCKED;
     public string|null $token = null;
+    public int $blocked = self::BLOCKED;
     public string $remember = "";
     public string $created_at = "";
     public string $updated_at = "";
@@ -100,19 +100,20 @@ class Users extends DbModel
     public function login($remember = false)
     {
         session_regenerate_id();
-        Application::$app->session->set(Config::get('session_login'), $this->uid);
+        Application::$app->session->set(Config::get('session_login'), $this->slug);
         self::$_current_user = $this;
         if ($remember) {
             $now = time();
             $newHash = md5("{$this->id}_{$now}");
-            $session = UserSessions::findByUserId($this->uid);
+            $session = UserSessions::findByUserSlug($this->slug);
             if (!$session) {
                 $session = new UserSessions();
             }
-            $session->user_id = $this->uid;
+            $session->user_slug = $this->slug;
             $session->hash = $newHash;
             $session->ip = UserInfo::get_ip();
             $session->os = UserInfo::get_os();
+            $session->device = UserInfo::get_device();
             $session->save();
             Cookie::set(Config::get('login_token'), $newHash, 60 * 60 * 24 * 30);
         }
@@ -128,8 +129,8 @@ class Users extends DbModel
         if (!$session)
             return false;
         $user = self::findFirst([
-            'conditions' => "uid = :uid",
-            'bind' => ['uid' => $session->user_id]
+            'conditions' => "slug = :slug",
+            'bind' => ['slug' => $session->user_slug]
         ]);
         if ($user) {
             $user->login(true);
@@ -140,7 +141,7 @@ class Users extends DbModel
     {
         Application::$app->session->remove(Config::get('session_login'));
         self::$_current_user = false;
-        $session = UserSessions::findByUserId($this->uid);
+        $session = UserSessions::findByUserSlug($this->slug);
         if ($session) {
             $session->delete();
         }
@@ -150,10 +151,10 @@ class Users extends DbModel
     public static function getCurrentUser()
     {
         if (!self::$_current_user && Application::$app->session->exists(Config::get('session_login'))) {
-            $user_id = Application::$app->session->get(Config::get('session_login'));
+            $user_slug = Application::$app->session->get(Config::get('session_login'));
             self::$_current_user = self::findFirst([
-                'conditions' => "uid = :uid",
-                'bind' => ['uid' => $user_id]
+                'conditions' => "slug = :slug",
+                'bind' => ['slug' => $user_slug]
             ]);
         }
         if (!self::$_current_user)
