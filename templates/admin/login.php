@@ -17,49 +17,29 @@ use App\Core\Support\Helpers\Token;
     <button type="button" class="btn btn-dark w-100 m-1 float-end" data-bs-toggle="modal" data-bs-target="#login"><i class="bi bi-box-arrow-in-right"></i> Login</button>
 </div>
 
-<!-- Add User Modal -->
+<!-- Login Modal -->
 <div class="modal fade" id="login">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Create New User</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Login Access - Dashboard</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="" method="post" id="form-data">
                     <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping">#</span>
-                        <input type="text" class="form-control" name="slug" value="<?= Token::generateOTP(6) ?>" aria-label="Slug" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-person"></i></span>
-                        <input type="text" class="form-control" name="surname" placeholder="Surname" aria-label="Surname" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-person-lines-fill"></i></span>
-                        <input type="text" class="form-control" name="name" placeholder="Name" aria-label="Name" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-envelope-at"></i></span>
-                        <input type="text" class="form-control" name="email" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping">
-                    </div>
-                    <div class="input-group flex-nowrap mb-3">
-                        <span class="input-group-text" id="addon-wrapping"><i class="bi bi-telephone"></i></span>
-                        <input type="text" class="form-control" name="phone" placeholder="Phone" aria-label="Phone" aria-describedby="addon-wrapping">
+                        <input type="text" class="form-control" name="email" id="email" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping">
                     </div>
                     <div class="input-group flex-nowrap mb-3">
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-shield-lock"></i></span>
-                        <input type="text" class="form-control" name="password" placeholder="Password" aria-label="Password" aria-describedby="addon-wrapping">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Password" aria-label="Password" aria-describedby="addon-wrapping">
                     </div>
                     <div class="input-group flex-nowrap">
-                        <input type="submit" class="btn btn-danger w-100" id="insert" value="Add User">
+                        <input type="submit" class="btn btn-danger w-100" id="login-btn" value="Login">
                     </div>
                 </form>
             </div>
-            <!-- <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Understood</button>
-            </div> -->
         </div>
     </div>
 </div>
@@ -72,19 +52,19 @@ use App\Core\Support\Helpers\Token;
     $(document).ready(function() {
 
         // Create New User.
-        $("#login").click(function(e) {
+        $("#login-btn").click(function(e) {
             if ($("#form-data")[0].checkValidity()) {
                 e.preventDefault();
                 $.ajax({
-                    url: "<?= Config::get("domain") ?>admin/login",
+                    url: "<?= Config::get("domain") ?>admin/login/access",
                     type: "POST",
                     data: $("#form-data").serialize() + "&action=login",
                     success: function(response) {
                         Swal.fire({
-                            title: 'User added successfully!',
+                            title: 'Login Successfully!',
                             icon: 'success'
                         })
-                        $("#addUser").modal('hide');
+                        $("#login").modal('hide');
                         $("#form-data")[0].reset();
                     }
                 });

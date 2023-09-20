@@ -21,12 +21,22 @@ class AdminLoginController extends Controller
     /**
      * @throws Exception
      */
-    public function login(Request $request, Response $response)
+    public function index(Request $request, Response $response)
     {
         $view = [
             
         ];
         $this->view->render('admin/login', $view);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function login(Request $request, Response $response)
+    {
+        if($request->isPost()) {
+            dd($_POST);
+        }
     }
 
 }
