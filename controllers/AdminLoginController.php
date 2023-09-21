@@ -23,8 +23,9 @@ class AdminLoginController extends Controller
      */
     public function login(Request $request, Response $response)
     {
-<<<<<<< HEAD
-        $view = [];
+        $view = [
+            
+        ];
         $this->view->render('admin/login', $view);
     }
 
@@ -60,18 +61,3 @@ class AdminLoginController extends Controller
         }
     }
 }
-=======
-        if($request->isPost()) {
-            if($request->post("action") && $request->post("action") === "login") {
-                dd($_POST);
-            }
-        }
-
-        $view = [
-            
-        ];
-        $this->view->render('admin/login', $view);
-    }
-
-}
->>>>>>> b9569b51105f966f4255c90230858d70849cf2c9

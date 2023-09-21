@@ -18,11 +18,7 @@ $app->router->get('/users/{id}', [SiteController::class, 'users']);
 // // Admin
 $app->router->get('/admin', [AdminController::class, 'admin']);
 $app->router->get('/admin/login', [AdminLoginController::class, 'login']);
-<<<<<<< HEAD
 $app->router->post('/admin/login', [AdminLoginController::class, 'login_access']);
-=======
-$app->router->post('/admin/login', [AdminLoginController::class, 'login']);
->>>>>>> b9569b51105f966f4255c90230858d70849cf2c9
 
 $app->router->get('/admin/users', [AdminUsersController::class, 'users']);
 $app->router->post('/admin/users', [AdminUsersController::class, 'show_users']);
