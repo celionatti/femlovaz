@@ -44,7 +44,11 @@ use App\Core\Support\Helpers\Token;
                         </label>
                     </div>
                     <div class="input-group flex-nowrap">
+<<<<<<< HEAD
                         <input type="submit" class="btn btn-dark w-100" id="login-btn" value="Login">
+=======
+                        <input type="submit" class="btn btn-dark btn-sm w-100" id="login-btn" value="Login">
+>>>>>>> b9569b51105f966f4255c90230858d70849cf2c9
                     </div>
                 </form>
             </div>
@@ -63,6 +67,7 @@ use App\Core\Support\Helpers\Token;
         $("#login-btn").click(function(e) {
             if ($("#form-data")[0].checkValidity()) {
                 e.preventDefault();
+<<<<<<< HEAD
 
                 // Get form data
                 const email = $('#email').val();
@@ -80,6 +85,22 @@ use App\Core\Support\Helpers\Token;
                     // Form is valid, send data to server using AJAX
                     sendDataToServer(email, password, remember);
                 }
+=======
+                $.ajax({
+                    url: "<?= Config::get("domain") ?>admin/login",
+                    type: "POST",
+                    data: $("#form-data").serialize() + "&action=login",
+                    success: function(response) {
+                        console.log(response)
+                        // Swal.fire({
+                        //     title: 'Login Successfully!',
+                        //     icon: 'success'
+                        // })
+                        // $("#login").modal('hide');
+                        // $("#form-data")[0].reset();
+                    }
+                });
+>>>>>>> b9569b51105f966f4255c90230858d70849cf2c9
             }
         });
 
