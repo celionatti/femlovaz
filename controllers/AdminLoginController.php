@@ -21,22 +21,41 @@ class AdminLoginController extends Controller
     /**
      * @throws Exception
      */
-    public function index(Request $request, Response $response)
+    public function login(Request $request, Response $response)
     {
-        $view = [
-            
-        ];
+        $view = [];
         $this->view->render('admin/login', $view);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function login(Request $request, Response $response)
+    public function login_access(Request $request, Response $response)
     {
-        if($request->isPost()) {
-            dd($_POST);
+        $user = new Users();
+        $isError = true;
+
+        if ($request->isPost()) {
+            if ($request->post("action") && $request->post("action") === "login") {
+                $user->loadData($request->getBody());
+                $user->validateLogin();
+
+                if (empty($user->getErrors())) {
+                    //continue with login.
+                    $u = Users::findFirst([
+                        'conditions' => "email = :email",
+                        'bind' => ['email' => $request->post('email')]
+                    ]);
+
+                    if ($u) {
+                        $verified = password_verify($request->post('password'), $u->password);
+                        if ($verified) {
+                            //log the user in
+                            $isError = false;
+                            $remember = $request->post('remember') == 'on';
+                            $u->login($remember);
+                            redirect('/');
+                        }
+                    }
+                }
+            }
         }
     }
-
 }

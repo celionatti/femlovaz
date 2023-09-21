@@ -27,6 +27,8 @@ use App\Core\Support\Helpers\Token;
             </div>
             <div class="modal-body">
                 <form action="" method="post" id="form-data">
+                    <p id="error-message"></p>
+                    <p id="success-message"></p>
                     <div class="input-group flex-nowrap mb-3">
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-envelope-at"></i></span>
                         <input type="text" class="form-control" name="email" id="email" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping">
@@ -35,8 +37,14 @@ use App\Core\Support\Helpers\Token;
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-shield-lock"></i></span>
                         <input type="password" class="form-control" name="password" id="password" placeholder="Password" aria-label="Password" aria-describedby="addon-wrapping">
                     </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                        <label class="form-check-label" for="remember">
+                            Remember Me
+                        </label>
+                    </div>
                     <div class="input-group flex-nowrap">
-                        <input type="submit" class="btn btn-danger w-100" id="login-btn" value="Login">
+                        <input type="submit" class="btn btn-dark w-100" id="login-btn" value="Login">
                     </div>
                 </form>
             </div>
@@ -55,21 +63,52 @@ use App\Core\Support\Helpers\Token;
         $("#login-btn").click(function(e) {
             if ($("#form-data")[0].checkValidity()) {
                 e.preventDefault();
-                $.ajax({
-                    url: "<?= Config::get("domain") ?>admin/login/access",
-                    type: "POST",
-                    data: $("#form-data").serialize() + "&action=login",
-                    success: function(response) {
-                        Swal.fire({
-                            title: 'Login Successfully!',
-                            icon: 'success'
-                        })
-                        $("#login").modal('hide');
-                        $("#form-data")[0].reset();
-                    }
-                });
+
+                // Get form data
+                const email = $('#email').val();
+                const password = $('#password').val();
+                const remember = $('#remember').val();
+
+                // Simple validation example (you can replace this with your own logic)
+                if (email === '' || password === '') {
+                    $('#error-message').text(' Email and Password are required')
+                        .addClass('bi bi-exclamation-diamond text-center bg-danger text-white fw-bold p-2 rounded')
+                } else if (!isValidEmail(email)) {
+                    $('#error-message').text(' Invalid E-mail format')
+                        .addClass('bi bi-envelope-exclamation text-center bg-danger text-white fw-bold p-2 rounded')
+                } else {
+                    // Form is valid, send data to server using AJAX
+                    sendDataToServer(email, password, remember);
+                }
             }
         });
+
+        function sendDataToServer(email, password, remember) {
+            $.ajax({
+                url: "<?= Config::get("domain") ?>admin/login",
+                type: "POST",
+                data: $("#form-data").serialize() + "&action=login",
+                success: function(response) {
+                    console.log(response)
+                    // Swal.fire({
+                    //     title: 'Login Successfully!',
+                    //     icon: 'success'
+                    // })
+                    // $("#login").modal('hide');
+                    // $('#error-message').removeClass('text-center bg-danger text-white fw-bold p-2 rounded');
+                    // $("#form-data")[0].reset();
+                },
+                error: function() {
+                    $('#error-message').text('Error occurred while submitting');
+                }
+            });
+        }
+
+        // Function to validate email using regular expression
+        function isValidEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            return emailRegex.test(email);
+        }
     });
 </script>
 <?php $this->end() ?>
