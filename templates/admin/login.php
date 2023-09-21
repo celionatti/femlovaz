@@ -35,8 +35,14 @@ use App\Core\Support\Helpers\Token;
                         <span class="input-group-text" id="addon-wrapping"><i class="bi bi-shield-lock"></i></span>
                         <input type="password" class="form-control" name="password" id="password" placeholder="Password" aria-label="Password" aria-describedby="addon-wrapping">
                     </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                        <label class="form-check-label" for="remember">
+                            Remember Me
+                        </label>
+                    </div>
                     <div class="input-group flex-nowrap">
-                        <input type="submit" class="btn btn-danger w-100" id="login-btn" value="Login">
+                        <input type="submit" class="btn btn-dark btn-sm w-100" id="login-btn" value="Login">
                     </div>
                 </form>
             </div>
@@ -56,16 +62,17 @@ use App\Core\Support\Helpers\Token;
             if ($("#form-data")[0].checkValidity()) {
                 e.preventDefault();
                 $.ajax({
-                    url: "<?= Config::get("domain") ?>admin/login/access",
+                    url: "<?= Config::get("domain") ?>admin/login",
                     type: "POST",
                     data: $("#form-data").serialize() + "&action=login",
                     success: function(response) {
-                        Swal.fire({
-                            title: 'Login Successfully!',
-                            icon: 'success'
-                        })
-                        $("#login").modal('hide');
-                        $("#form-data")[0].reset();
+                        console.log(response)
+                        // Swal.fire({
+                        //     title: 'Login Successfully!',
+                        //     icon: 'success'
+                        // })
+                        // $("#login").modal('hide');
+                        // $("#form-data")[0].reset();
                     }
                 });
             }
