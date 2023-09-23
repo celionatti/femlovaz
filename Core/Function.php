@@ -1,6 +1,9 @@
 <?php
 
+use App\Core\Application;
 use App\Core\Config;
+use App\models\Users;
+use App\Core\Response;
 use JetBrains\PhpStorm\NoReturn;
 use App\Core\Support\Helpers\Image;
 
@@ -62,9 +65,9 @@ function console_logger($message): void
     echo "[" . date("Y-m-d H:i:s") . "] - " . $message . PHP_EOL;
 }
 
-#[NoReturn] function redirect($uri): void
+#[NoReturn] function redirect($uri, $code = Response::FOUND): void
 {
-    http_response_code(\App\Core\Response::FOUND);
+    http_response_code($code);
     if (!headers_sent()) {
         header("Location: $uri");
     } else {
@@ -77,6 +80,18 @@ function console_logger($message): void
     }
     exit();
 }
+
+function authRedirect($perm, $redirect, $msg = "You do not have access to this page."): void
+    {
+        /** @var mixed $user */
+
+        $user = Users::getCurrentUser() ?? null;
+        $allowed = $user && $user->hasPermission($perm);
+        if (!$allowed) {
+            Application::$app->session->setFlash("warning", $msg);
+            redirect($redirect);
+        }
+    }
 
 function last_uri(): void
 {

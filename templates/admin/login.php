@@ -89,14 +89,14 @@ use App\Core\Support\Helpers\Token;
                 type: "POST",
                 data: $("#form-data").serialize() + "&action=login",
                 success: function(response) {
-                    console.log(response)
-                    // Swal.fire({
-                    //     title: 'Login Successfully!',
-                    //     icon: 'success'
-                    // })
-                    // $("#login").modal('hide');
-                    // $('#error-message').removeClass('text-center bg-danger text-white fw-bold p-2 rounded');
-                    // $("#form-data")[0].reset();
+                    Swal.fire({
+                        title: 'Login Successfully!',
+                        icon: 'success'
+                    })
+                    $("#login").modal('hide');
+                    $('#error-message').removeClass('text-center bg-danger text-white fw-bold p-2 rounded');
+                    $("#form-data")[0].reset();
+                    window.location.href = response
                 },
                 error: function() {
                     $('#error-message').text('Error occurred while submitting');

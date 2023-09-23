@@ -2,6 +2,7 @@
 
 namespace App\controllers;
 
+use App\Core\Config;
 use App\Core\Request;
 use App\models\Users;
 use App\Core\Response;
@@ -23,9 +24,7 @@ class AdminLoginController extends Controller
      */
     public function login(Request $request, Response $response)
     {
-        $view = [
-            
-        ];
+        $view = [];
         $this->view->render('admin/login', $view);
     }
 
@@ -53,9 +52,14 @@ class AdminLoginController extends Controller
                             $isError = false;
                             $remember = $request->post('remember') == 'on';
                             $u->login($remember);
-                            redirect('/');
+                            // redirect(Config::get("domain"). "admin");
+                            echo (Config::get("domain"). "admin");
                         }
                     }
+                }
+                if ($isError) {
+                    $user->setError('email', 'Something is wrong with the Email or Password. Please try again.');
+                    $user->setError('password', '');
                 }
             }
         }

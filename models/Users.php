@@ -76,27 +76,6 @@ class Users extends DbModel
         $this->runValidation(new RequiredValidation($this, ['field' => 'password', 'msg' => "Password is a required field."]));
     }
 
-    public function validateChangePassword()
-    {
-        $this->runValidation(new RequiredValidation($this, ['field' => 'password', 'msg' => "Password is a required field."]));
-        $this->runValidation(new RequiredValidation($this, ['field' => 'confirm_password', 'msg' => "Confirm Password is a required field."]));
-        $this->runValidation(new RequiredValidation($this, ['field' => 'old_password', 'msg' => "Old Password is a required field."]));
-        $this->runValidation(new MatchesValidation($this, ['field' => 'confirm_password', 'rule' => $this->password, 'msg' => "Your passwords do not match."]));
-        $this->runValidation(new MinValidation($this, ['field' => 'password', 'rule' => 8, 'msg' => "Password must be at least 8 characters."]));
-
-        $this->password = Bcrypt::hashPassword($this->password);
-    }
-
-    public function validateChangePasswordAuth()
-    {
-        $this->runValidation(new RequiredValidation($this, ['field' => 'password', 'msg' => "Password is a required field."]));
-        $this->runValidation(new RequiredValidation($this, ['field' => 'confirm_password', 'msg' => "Confirm Password is a required field."]));
-        $this->runValidation(new MatchesValidation($this, ['field' => 'confirm_password', 'rule' => $this->password, 'msg' => "Your passwords do not match."]));
-        $this->runValidation(new MinValidation($this, ['field' => 'password', 'rule' => 8, 'msg' => "Password must be at least 8 characters."]));
-
-        $this->password = Bcrypt::hashPassword($this->password);
-    }
-
     public function login($remember = false)
     {
         session_regenerate_id();
@@ -109,7 +88,7 @@ class Users extends DbModel
             if (!$session) {
                 $session = new UserSessions();
             }
-            $session->user_slug = $this->slug;
+            $session->user_id = $this->slug;
             $session->hash = $newHash;
             $session->ip = UserInfo::get_ip();
             $session->os = UserInfo::get_os();
