@@ -22,6 +22,7 @@ class AdminCustomersController extends Controller
     {
         $this->view->setLayout('admin');
         // $this->currentUser = Users::getCurrentUser();
+        authRedirect(['admin'], "/admin/login");
     }
 
     /**

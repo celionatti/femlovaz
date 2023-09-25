@@ -84,7 +84,7 @@ class Users extends DbModel
         if ($remember) {
             $now = time();
             $newHash = md5("{$this->id}_{$now}");
-            $session = UserSessions::findByUserSlug($this->slug);
+            $session = UserSessions::findByUserId($this->slug);
             if (!$session) {
                 $session = new UserSessions();
             }
@@ -109,7 +109,7 @@ class Users extends DbModel
             return false;
         $user = self::findFirst([
             'conditions' => "slug = :slug",
-            'bind' => ['slug' => $session->user_slug]
+            'bind' => ['slug' => $session->user_id]
         ]);
         if ($user) {
             $user->login(true);
@@ -120,7 +120,7 @@ class Users extends DbModel
     {
         Application::$app->session->remove(Config::get('session_login'));
         self::$_current_user = false;
-        $session = UserSessions::findByUserSlug($this->slug);
+        $session = UserSessions::findByUserId($this->slug);
         if ($session) {
             $session->delete();
         }

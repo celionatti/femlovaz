@@ -24,6 +24,7 @@ class AdminPaymentsController extends Controller
     public function onConstruct(): void
     {
         $this->view->setLayout('admin');
+        authRedirect(['admin'], "/admin/login");
         // $this->currentUser = Users::getCurrentUser();
     }
 
@@ -71,7 +72,7 @@ class AdminPaymentsController extends Controller
         $this->view->render('admin/payments/sales/index', $view);
     }
 
-     /**
+    /**
      * @throws Exception
      */
     public function show_sales(Request $request, Response $response)
@@ -101,12 +102,12 @@ class AdminPaymentsController extends Controller
                     $output .= '<tr class="text-center text-scondary">
                     <td>' . $key + 1 . '</td>
                     <td class="text-capitalize">' . $row->name . '</td>
-                    <td>' .'N '. number_format($row->amount, 2) . '</td>
+                    <td>' . 'N ' . number_format($row->amount, 2) . '</td>
                     <td>' . $row->qty . '</td>
                     <td class="text-capitalize">' . $row->payment_method . '</td>
                     <td>' . $row->note . '</td>
                     <td>' . TimeFormat::DateOne($row->created_at) . '</td>
-                    <td class="text-capitalize '.statusMode($row->status).'">' . $row->status . '</td>
+                    <td class="text-capitalize ' . statusMode($row->status) . '">' . $row->status . '</td>
                     <td>
                     <a href="#" title="Edit Sale" class="text-primary editBtn" id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#editSale"><i class="bi bi-pencil-square fs-5"></i></a>&nbsp;&nbsp;
 
@@ -131,6 +132,12 @@ class AdminPaymentsController extends Controller
             if ($request->post("action") && $request->post("action") === "insert") {
                 $sale->loadData($request->getBody());
                 if (empty($sale->getErrors())) {
+                    $stock = Stocks::findFirst([
+                        'condition' => "name = :name",
+                        'bind' => ['name' => $sale->name]
+                    ]);
+                    dd($stock);
+
                     $sale->save();
                 }
             }
@@ -224,7 +231,7 @@ class AdminPaymentsController extends Controller
         $this->view->render('admin/payments/subscriptions/index', $view);
     }
 
-     /**
+    /**
      * @throws Exception
      */
     public function show_subscriptions(Request $request, Response $response)
@@ -256,14 +263,14 @@ class AdminPaymentsController extends Controller
                     $output .= '<tr class="text-center text-secondary">
                     <td>' . $key + 1 . '</td>
                     <td>' . $row->transaction_id . '</td>
-                    <td>' .'N '. number_format($row->amount, 2) . '</td>
+                    <td>' . 'N ' . number_format($row->amount, 2) . '</td>
                     <td class="text-capitalize">' . $row->name . '</td>
                     <td>' . $row->iuc_number . '</td>
                     <td class="text-capitalize">' . $row->decoder_type . '</td>
                     <td class="text-capitalize">' . $row->payment_method . '</td>
                     <td>' . $row->note . '</td>
                     <td>' . TimeFormat::DateOne($row->created_at) . '</td>
-                    <td class="text-capitalize '.statusMode($row->status).'">' . $row->status . '</td>
+                    <td class="text-capitalize ' . statusMode($row->status) . '">' . $row->status . '</td>
                     <td>
                     <a href="#" title="Edit Subscription" class="text-primary editBtn" id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#editSubscription"><i class="bi bi-pencil-square fs-5"></i></a>&nbsp;&nbsp;
 
@@ -355,88 +362,88 @@ class AdminPaymentsController extends Controller
 
         $data = Subscriptions::find();
 
-            // Define headers
-            $worksheet->setCellValue('A1', 'Name');
-            $worksheet->setCellValue('B1', 'Amount');
-            $worksheet->setCellValue('C1', 'IUC Number');
-            $worksheet->setCellValue('D1', 'Decoder Type');
-            $worksheet->setCellValue('E1', 'Payment Method');
-            $worksheet->setCellValue('F1', 'Note');
-            $worksheet->setCellValue('G1', 'Status');
-            $worksheet->setCellValue('H1', 'Transaction ID');
+        // Define headers
+        $worksheet->setCellValue('A1', 'Name');
+        $worksheet->setCellValue('B1', 'Amount');
+        $worksheet->setCellValue('C1', 'IUC Number');
+        $worksheet->setCellValue('D1', 'Decoder Type');
+        $worksheet->setCellValue('E1', 'Payment Method');
+        $worksheet->setCellValue('F1', 'Note');
+        $worksheet->setCellValue('G1', 'Status');
+        $worksheet->setCellValue('H1', 'Transaction ID');
 
-            // Start row for data
-            $row = 2;
+        // Start row for data
+        $row = 2;
 
-            // Loop through the database data
-            foreach ($data as $row_data) {
-                $worksheet->setCellValue('A' . $row, $row_data->name); // Name
-                $worksheet->setCellValue('B' . $row, $row_data->amount); // Amount
-                $worksheet->setCellValue('C' . $row, $row_data->iuc_number); // IUC Method
-                $worksheet->setCellValue('D' . $row, $row_data->decoder_type); // Decoder Type
-                $worksheet->setCellValue('E' . $row, $row_data->payment_method); // Payment Method
-                $worksheet->setCellValue('F' . $row, $row_data->note); // Note
-                $worksheet->setCellValue('G' . $row, $row_data->status); // Status
-                $worksheet->setCellValue('H' . $row, $row_data->transaction_id); // Transaction ID
+        // Loop through the database data
+        foreach ($data as $row_data) {
+            $worksheet->setCellValue('A' . $row, $row_data->name); // Name
+            $worksheet->setCellValue('B' . $row, $row_data->amount); // Amount
+            $worksheet->setCellValue('C' . $row, $row_data->iuc_number); // IUC Method
+            $worksheet->setCellValue('D' . $row, $row_data->decoder_type); // Decoder Type
+            $worksheet->setCellValue('E' . $row, $row_data->payment_method); // Payment Method
+            $worksheet->setCellValue('F' . $row, $row_data->note); // Note
+            $worksheet->setCellValue('G' . $row, $row_data->status); // Status
+            $worksheet->setCellValue('H' . $row, $row_data->transaction_id); // Transaction ID
 
-                // Increment row counter
-                $row++;
-            }
+            // Increment row counter
+            $row++;
+        }
 
-            $worksheet->getColumnDimension('A')->setWidth(20);
-            $worksheet->getColumnDimension('B')->setWidth(25);
-            $worksheet->getColumnDimension('C')->setWidth(20);
-            $worksheet->getColumnDimension('D')->setWidth(25);
-            $worksheet->getColumnDimension('E')->setWidth(20);
-            $worksheet->getColumnDimension('F')->setWidth(30);
-            $worksheet->getColumnDimension('G')->setWidth(20);
-            $worksheet->getColumnDimension('H')->setWidth(30);
+        $worksheet->getColumnDimension('A')->setWidth(20);
+        $worksheet->getColumnDimension('B')->setWidth(25);
+        $worksheet->getColumnDimension('C')->setWidth(20);
+        $worksheet->getColumnDimension('D')->setWidth(25);
+        $worksheet->getColumnDimension('E')->setWidth(20);
+        $worksheet->getColumnDimension('F')->setWidth(30);
+        $worksheet->getColumnDimension('G')->setWidth(20);
+        $worksheet->getColumnDimension('H')->setWidth(30);
 
-            $border = new Border();
-            $border->setBorderStyle(Border::BORDER_THIN);
+        $border = new Border();
+        $border->setBorderStyle(Border::BORDER_THIN);
 
-            $worksheet->getStyle('A1:H1')->getBorders()->applyFromArray([
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                ],
-            ]);
-
-
-            $fill = new Fill();
-            $fill->setFillType(Fill::FILL_SOLID);
-            $fill->getStartColor()->setARGB('000000'); // Yellow
-
-            $worksheet->getStyle('A1:H1')->getFill()->applyFromArray([
-                'fillType' => Fill::FILL_SOLID,
-                'startColor' => [
-                    'argb' => '000000',
-                ],
-            ]);
+        $worksheet->getStyle('A1:H1')->getBorders()->applyFromArray([
+            'allBorders' => [
+                'borderStyle' => Border::BORDER_THIN,
+            ],
+        ]);
 
 
-            $font = new Font();
-            $font->setBold(true);
-            $font->setColor(new Color(Color::COLOR_WHITE));
-            $font->setSize(14);
+        $fill = new Fill();
+        $fill->setFillType(Fill::FILL_SOLID);
+        $fill->getStartColor()->setARGB('000000'); // Yellow
 
-            $worksheet->getStyle('A1:H1')->getFont()->applyFromArray([
-                'bold' => true,
-                'color' => [
-                    'rgb' => 'FFFFFF',
-                ],
-                'size' => 14,
-            ]);
+        $worksheet->getStyle('A1:H1')->getFill()->applyFromArray([
+            'fillType' => Fill::FILL_SOLID,
+            'startColor' => [
+                'argb' => '000000',
+            ],
+        ]);
 
-            // Save the Excel file
-            $writer = new Xlsx($spreadsheet);
-            $excelFilename = 'subscriptions.xlsx'; // Change to your desired file name
-            $writer->save($excelFilename);
 
-            // Provide download link
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="' . $excelFilename . '"');
-            header('Cache-Control: max-age=0');
-            readfile($excelFilename);
+        $font = new Font();
+        $font->setBold(true);
+        $font->setColor(new Color(Color::COLOR_WHITE));
+        $font->setSize(14);
+
+        $worksheet->getStyle('A1:H1')->getFont()->applyFromArray([
+            'bold' => true,
+            'color' => [
+                'rgb' => 'FFFFFF',
+            ],
+            'size' => 14,
+        ]);
+
+        // Save the Excel file
+        $writer = new Xlsx($spreadsheet);
+        $excelFilename = 'subscriptions.xlsx'; // Change to your desired file name
+        $writer->save($excelFilename);
+
+        // Provide download link
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $excelFilename . '"');
+        header('Cache-Control: max-age=0');
+        readfile($excelFilename);
     }
 
     private function generate_excel_sales()
@@ -447,78 +454,78 @@ class AdminPaymentsController extends Controller
 
         $data = Sales::find();
 
-            // Define headers
-            $worksheet->setCellValue('A1', 'Name');
-            $worksheet->setCellValue('B1', 'Amount');
-            $worksheet->setCellValue('C1', 'Qty');
-            $worksheet->setCellValue('D1', 'Payment Method');
-            $worksheet->setCellValue('E1', 'Note');
+        // Define headers
+        $worksheet->setCellValue('A1', 'Name');
+        $worksheet->setCellValue('B1', 'Amount');
+        $worksheet->setCellValue('C1', 'Qty');
+        $worksheet->setCellValue('D1', 'Payment Method');
+        $worksheet->setCellValue('E1', 'Note');
 
-            // Start row for data
-            $row = 2;
+        // Start row for data
+        $row = 2;
 
-            // Loop through the database data
-            foreach ($data as $row_data) {
-                $worksheet->setCellValue('A' . $row, $row_data->name); // Name
-                $worksheet->setCellValue('B' . $row, $row_data->amount); // Amount
-                $worksheet->setCellValue('C' . $row, $row_data->qty); // Qty
-                $worksheet->setCellValue('D' . $row, $row_data->payment_method); // Payment Method
-                $worksheet->setCellValue('E' . $row, $row_data->note); // Note
+        // Loop through the database data
+        foreach ($data as $row_data) {
+            $worksheet->setCellValue('A' . $row, $row_data->name); // Name
+            $worksheet->setCellValue('B' . $row, $row_data->amount); // Amount
+            $worksheet->setCellValue('C' . $row, $row_data->qty); // Qty
+            $worksheet->setCellValue('D' . $row, $row_data->payment_method); // Payment Method
+            $worksheet->setCellValue('E' . $row, $row_data->note); // Note
 
-                // Increment row counter
-                $row++;
-            }
+            // Increment row counter
+            $row++;
+        }
 
-            $worksheet->getColumnDimension('A')->setWidth(20);
-            $worksheet->getColumnDimension('B')->setWidth(20);
-            $worksheet->getColumnDimension('C')->setWidth(20);
-            $worksheet->getColumnDimension('D')->setWidth(25);
-            $worksheet->getColumnDimension('E')->setWidth(30);
+        $worksheet->getColumnDimension('A')->setWidth(20);
+        $worksheet->getColumnDimension('B')->setWidth(20);
+        $worksheet->getColumnDimension('C')->setWidth(20);
+        $worksheet->getColumnDimension('D')->setWidth(25);
+        $worksheet->getColumnDimension('E')->setWidth(30);
 
-            $border = new Border();
-            $border->setBorderStyle(Border::BORDER_THIN);
+        $border = new Border();
+        $border->setBorderStyle(Border::BORDER_THIN);
 
-            $worksheet->getStyle('A1:E1')->getBorders()->applyFromArray([
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                ],
-            ]);
-
-
-            $fill = new Fill();
-            $fill->setFillType(Fill::FILL_SOLID);
-            $fill->getStartColor()->setARGB('000000'); // Yellow
-
-            $worksheet->getStyle('A1:E1')->getFill()->applyFromArray([
-                'fillType' => Fill::FILL_SOLID,
-                'startColor' => [
-                    'argb' => '000000',
-                ],
-            ]);
+        $worksheet->getStyle('A1:E1')->getBorders()->applyFromArray([
+            'allBorders' => [
+                'borderStyle' => Border::BORDER_THIN,
+            ],
+        ]);
 
 
-            $font = new Font();
-            $font->setBold(true);
-            $font->setColor(new Color(Color::COLOR_WHITE));
-            $font->setSize(14);
+        $fill = new Fill();
+        $fill->setFillType(Fill::FILL_SOLID);
+        $fill->getStartColor()->setARGB('000000'); // Yellow
 
-            $worksheet->getStyle('A1:E1')->getFont()->applyFromArray([
-                'bold' => true,
-                'color' => [
-                    'rgb' => 'FFFFFF',
-                ],
-                'size' => 14,
-            ]);
+        $worksheet->getStyle('A1:E1')->getFill()->applyFromArray([
+            'fillType' => Fill::FILL_SOLID,
+            'startColor' => [
+                'argb' => '000000',
+            ],
+        ]);
 
-            // Save the Excel file
-            $writer = new Xlsx($spreadsheet);
-            $excelFilename = 'sales.xlsx'; // Change to your desired file name
-            $writer->save($excelFilename);
 
-            // Provide download link
-            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="' . $excelFilename . '"');
-            header('Cache-Control: max-age=0');
-            readfile($excelFilename);
+        $font = new Font();
+        $font->setBold(true);
+        $font->setColor(new Color(Color::COLOR_WHITE));
+        $font->setSize(14);
+
+        $worksheet->getStyle('A1:E1')->getFont()->applyFromArray([
+            'bold' => true,
+            'color' => [
+                'rgb' => 'FFFFFF',
+            ],
+            'size' => 14,
+        ]);
+
+        // Save the Excel file
+        $writer = new Xlsx($spreadsheet);
+        $excelFilename = 'sales.xlsx'; // Change to your desired file name
+        $writer->save($excelFilename);
+
+        // Provide download link
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $excelFilename . '"');
+        header('Cache-Control: max-age=0');
+        readfile($excelFilename);
     }
 }

@@ -10,7 +10,7 @@ use App\Core\Support\Helpers\Image;
 function dd($value): void
 {
     echo "<pre>";
-    echo "<div style='background-color:#155263; color:#fff; margin: 5px; padding:5px;border:3px solid; border-color:red;'>";
+    echo "<div style='background-color:#000; color:#458657; margin: 5px; padding:5px;border:3px solid; border-color:red;'>";
     echo "<h2 style='border:3px solid; border-color:teal; padding:5px; text-align:center;font-weight:bold;font-weight: bold;
     text-transform: uppercase;'>";
     echo "Error Type: Dump and die";

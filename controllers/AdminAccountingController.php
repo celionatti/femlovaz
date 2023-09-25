@@ -21,6 +21,7 @@ class AdminAccountingController extends Controller
 
     public function onConstruct(): void
     {
+        authRedirect(['admin'], "/admin/login");
         $this->view->setLayout('admin');
         // $this->currentUser = Users::getCurrentUser();
     }

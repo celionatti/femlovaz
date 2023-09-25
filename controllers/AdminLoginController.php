@@ -2,6 +2,7 @@
 
 namespace App\controllers;
 
+use App\Core\Application;
 use App\Core\Config;
 use App\Core\Request;
 use App\models\Users;
@@ -16,7 +17,9 @@ class AdminLoginController extends Controller
     public function onConstruct(): void
     {
         $this->view->setLayout('admin-auth');
-        $this->currentUser = Users::getCurrentUser();
+        if($this->currentUser = Users::getCurrentUser()) {
+            redirect(Config::get("domain") . "admin");
+        }
     }
 
     /**
@@ -41,8 +44,8 @@ class AdminLoginController extends Controller
                 if (empty($user->getErrors())) {
                     //continue with login.
                     $u = Users::findFirst([
-                        'conditions' => "email = :email",
-                        'bind' => ['email' => $request->post('email')]
+                        'conditions' => "email = :email AND acl = :acl",
+                        'bind' => ['email' => $request->post('email'), 'acl' => "admin"]
                     ]);
 
                     if ($u) {
@@ -52,14 +55,13 @@ class AdminLoginController extends Controller
                             $isError = false;
                             $remember = $request->post('remember') == 'on';
                             $u->login($remember);
-                            // redirect(Config::get("domain"). "admin");
-                            echo (Config::get("domain"). "admin");
+                            echo (Config::get("domain") . "admin");
                         }
                     }
                 }
                 if ($isError) {
-                    $user->setError('email', 'Something is wrong with the Email or Password. Please try again.');
-                    $user->setError('password', '');
+                    echo (Config::get("domain") . "admin/login");
+                    Application::$app->session->setFlash("warning", "Something is wrong with the Email or Password. Please try again.");
                 }
             }
         }

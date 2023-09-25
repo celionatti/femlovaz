@@ -21,6 +21,7 @@ class AdminStocksController extends Controller
     public function onConstruct(): void
     {
         $this->view->setLayout('admin');
+        authRedirect(['admin'], "/admin/login");
         // $this->currentUser = Users::getCurrentUser();
     }
 

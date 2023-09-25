@@ -179,6 +179,7 @@ use App\Core\Support\Helpers\Token;
                     type: "POST",
                     data: $("#form-data").serialize() + "&action=insert",
                     success: function(response) {
+                        console.log(response)
                         Swal.fire({
                             title: 'Sale added successfully!',
                             icon: 'success'
